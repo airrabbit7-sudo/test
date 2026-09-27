@@ -1,0 +1,180 @@
+/* Great Vibes */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+/* Allura */
+@import url('https://fonts.googleapis.com/css2?family=Allura&display=swap');
+
+/* Parisienne */
+@import url('https://fonts.googleapis.com/css2?family=Parisienne&display=swap');
+
+/* Alex Brush */
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap');
+
+/* Bodoni Moda */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,700&display=swap');
+
+/* Playfair Display */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+
+/* Cormorant Garamond */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap');
+
+/* Cinzel */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+/* Pacifico */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+/* Lobster */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+/* Dancing Script */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+
+    background-color:#ffe6ee;
+}
+#countdown {
+    font-size: 10vw;
+    font-weight: bold;
+    color: pink;
+    -webkit-text-stroke: 0.2vw #ff4f81;
+    position: relative;
+    z-index: 2;
+    white-space = nowrap;
+}
+#countdown.finished {
+    color: red;
+    -webkit-text-stroke: 0.2vw #000000;
+}
+.heart {
+    position: fixed;
+    top: -50px;
+    left: 50%;
+    font-size: 15px;
+    animation: fall 10s linear;
+    z-index:  1;
+}
+#countdown.shrink {
+    animation: shrinkAndFade 3s ease-out forwards;
+}
+
+@keyframes shrinkAndFade {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+@keyframes fall {
+    from {
+        transform: translateY(0);
+    }
+    to{
+        transform: translateY(110vh);
+    }
+}
+#birthday-text {
+    //font-family: "Great Vibes", cursive;
+    font-family: "Alex Brush", serif;
+    position: absolute;
+    font-size: 9vw;
+    font-weight: bold;
+    color: white;
+    -webkit-text-stroke: 0.001vw #ff4f81;
+    opacity: 0;
+    transform: scale(0.5);
+    text-align: center;
+    z-index: 3;
+}
+
+#birthday-text.show {
+    animation: birthdayAppear 1s ease-out forwards;
+}
+
+@keyframes birthdayAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.celebration-emoji {
+    position: fixed;
+    bottom: 0;
+    font-size: 30px;
+    z-index: 4;
+    pointer-events: none;
+    animation: emojiBurst 2.8s ease-out forwards;
+}
+
+@keyframes emojiBurst {
+    0% {
+        transform: translate(0, 0) scale(0.3) rotate(0deg);
+        opacity: 1;
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    75% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--x), var(--y)) scale(1.2) rotate(var(--rotate));
+        opacity: 0;
+    }
+}
+#cake {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+
+    width: min(80vw, 90vh);
+    max-height: 80vh;
+
+    object-fit: contain;
+
+    transform: translate(-50%, 100%);
+    opacity: 1;
+
+    z-index: 3;
+}
+
+#cake.show {
+    animation: cakeRise 5s ease-out forwards;
+}
+
+@keyframes cakeRise {
+    from {
+        transform: translate(-50%, 100%);
+        opacity: 1;
+    }
+
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
