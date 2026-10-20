@@ -154,7 +154,7 @@ async function detectBlow() {
         hangSound.currentTime = 0;
         hangSound.volume = 1;
         hangSound.play().catch(console.error);
-        console.log("Fújás erőssége:", rms);
+       
         setTimeout(() => {
             thirdProgram();
         }, 1000);
@@ -218,7 +218,7 @@ async function listenForBlow(onBlow) {
             }
 
             const rms = Math.sqrt(sum / data.length);
-            console.log("Mikrofon RMS:", rms.toFixed(4));
+           
 
             // Kezdő küszöb: a környezeti zajtól függően módosítható.
             if (rms > 0.035) {
