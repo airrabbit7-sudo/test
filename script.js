@@ -14,7 +14,7 @@ tickSound.loop = true;
 if(!surpriseStarted){
 tickSound.play();
 }
-const targetDate = new Date("2026-10-20T19:13:00");
+const targetDate = new Date("2026-10-20T19:15:00");
 const countdownTimer = setInterval(() => {
     const now = new Date();
     difference = targetDate - now;
