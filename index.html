@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You'll see...</title>
+    <link rel="stylesheet" href="style.css">
+
+    </head>
+<body>
+
+    <div id="countdown">
+               00 : 00 : 00 : 00
+    </div>
+    <div id="blow-text">Fújd el a gyertyákat!</div>
+    <div id="birthday-text">
+    <div>HAPPY</div>
+    <div>BIRTHDAY</div>
+</div>
+    <img id="cake" src="images/cake.png" alt="">
+
+<div id="gifts-container">
+    <div class="gift" onclick="openGift(1)">
+        <div class="gift-emoji">🎁</div>
+        <div class="gift-label">Ezzel kezdd!</div>
+    </div>
+
+    <div class="gift" onclick="openGift(2)">
+        <div class="gift-emoji">🎁</div>
+        <div class="gift-label">Majd ezzel folytasd!</div>
+    </div>
+
+    <div class="gift" onclick="openGift(3)">
+        <div class="gift-emoji">🎁</div>
+        <div class="gift-label">Ezt hagyd a végére!</div>
+    </div>
+</div>
+
+
+<div id="gift-popup">
+    <div class="gift-popup-content">
+        <button class="close-gift" onclick="closeGift()">×</button>
+
+        <h2 id="gift-title">Az első ajándékom, fogadd sok szeretettel..💗</h2>
+
+        <p id="gift-description">Szkenneld be! 💕</p>
+
+        <div id="qr-code"></div>
+
+        <a id="gift-link" class="gift-link-button"
+           href="#" target="_blank" rel="noopener noreferrer">
+            Megnyitom az ajándékomat 💗
+        </a>
+    </div>
+</div>
+
+
+    <script src="script.js"></script>
+</body>
