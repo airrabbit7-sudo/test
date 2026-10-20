@@ -146,95 +146,59 @@ function secondProgram() {
         detectBlow();
     }, 3000);
 }
-
 async function detectBlow() {
-    await listenForBlow(() => {
-        document.getElementById("cake").src = "images/cake2.png";
-
-        hangSound.currentTime = 0;
-        hangSound.volume = 1;
-        hangSound.play().catch(console.error);
-       
-        setTimeout(() => {
-            thirdProgram();
-        }, 1000);
-    });
-}
-
-function thirdProgram() {
-    detectBlowAgain();
-}
-
-async function detectBlowAgain() {
-    await listenForBlow(() => {
-        document.getElementById("cake").src = "images/cake3.png";
-
-        fireSound.currentTime = 0;
-        fireSound.volume = 1;
-        fireSound.play().catch(console.error);
-
-        fireworks();
-    });
-}
-
-async function listenForBlow(onBlow) {
-    let stream;
-    let audioContext;
 
     try {
-        stream = await navigator.mediaDevices.getUserMedia({
-            audio: {
-                echoCancellation: false,
-                noiseSuppression: false,
-                autoGainControl: false
-            }
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true
         });
 
-        audioContext = new AudioContext();
-        await audioContext.resume();
-
+        const audioContext = new AudioContext();
         const microphone = audioContext.createMediaStreamSource(stream);
         const analyser = audioContext.createAnalyser();
 
         analyser.fftSize = 1024;
-        analyser.smoothingTimeConstant = 0.2;
+        analyser.smoothingTimeConstant = 0.3;
+
         microphone.connect(analyser);
 
-        const data = new Uint8Array(analyser.fftSize);
+        const data = new Uint8Array(analyser.frequencyBinCount);
 
         let loudFrames = 0;
-        let finished = false;
 
         function checkBlow() {
-            if (finished) return;
 
-            analyser.getByteTimeDomainData(data);
+            analyser.getByteFrequencyData(data);
 
-            let sum = 0;
+            let total = 0;
 
             for (let i = 0; i < data.length; i++) {
-                const value = (data[i] - 128) / 128;
-                sum += value * value;
+                total += data[i];
             }
 
-            const rms = Math.sqrt(sum / data.length);
-           
+            const average = total / data.length;
 
-            // Kezdő küszöb: a környezeti zajtól függően módosítható.
-            if (rms > 0.035) {
+            // NAGYON hangos hang szükséges
+            if (average > 80) {
                 loudFrames++;
             } else {
                 loudFrames = 0;
             }
 
-            // Körülbelül 150–200 ms folyamatos hang szükséges.
-            if (loudFrames >= 8) {
-                finished = true;
+            // Legalább több egymást követő mérés legyen hangos
+            if (loudFrames >= 10) {
+
+                const cake = document.getElementById("cake");
+                cake.src = "images/cake2.png";
+                hangSound.currentTime = 0;
+                hangSound.volume = 1.0;
+                hangSound.play();
 
                 stream.getTracks().forEach(track => track.stop());
                 audioContext.close();
-
-                onBlow();
+                setTimeout(() => {
+                    thirdProgram();
+                }, 1000);
                 return;
             }
 
@@ -244,19 +208,77 @@ async function listenForBlow(onBlow) {
         checkBlow();
 
     } catch (error) {
-        console.error("Mikrofonhiba:", error);
-        alert("Nem sikerült elérni a mikrofont. Engedélyezd a böngészőben, majd próbáld újra!");
-
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-        }
-
-        if (audioContext && audioContext.state !== "closed") {
-            await audioContext.close();
-        }
+        console.error("Mikrofon hiba:", error);
     }
 }
+function thirdProgram() {
 
+    detectBlowAgain();
+
+}
+async function detectBlowAgain() {
+
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true
+        });
+
+        const audioContext = new AudioContext();
+        const microphone = audioContext.createMediaStreamSource(stream);
+        const analyser = audioContext.createAnalyser();
+
+        analyser.fftSize = 1024;
+        analyser.smoothingTimeConstant = 0.3;
+
+        microphone.connect(analyser);
+
+        const data = new Uint8Array(analyser.frequencyBinCount);
+
+        let loudFrames = 0;
+
+        function checkVolume() {
+
+            analyser.getByteFrequencyData(data);
+
+            let total = 0;
+
+            for (let i = 0; i < data.length; i++) {
+                total += data[i];
+            }
+
+            const average = total / data.length;
+
+            if (average > 80) {
+                loudFrames++;
+            } else {
+                loudFrames = 0;
+            }
+
+            if (loudFrames >= 10) {
+
+                const cake = document.getElementById("cake");
+
+                cake.src = "images/cake3.png";
+                fireSound.currentTime = 0;
+                fireSound.volume = 1.0;
+                fireSound.play();
+                fireworks();
+
+                stream.getTracks().forEach(track => track.stop());
+                audioContext.close();
+
+                return;
+            }
+
+            requestAnimationFrame(checkVolume);
+        }
+
+        checkVolume();
+
+    } catch (error) {
+        console.error("Mikrofon hiba:", error);
+    }
+}
 function fireworks() {
 
     let running = true;
