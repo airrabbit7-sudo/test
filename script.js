@@ -154,7 +154,7 @@ async function detectBlow() {
         hangSound.currentTime = 0;
         hangSound.volume = 1;
         hangSound.play().catch(console.error);
-
+        console.log("Fújás erőssége:", rms);
         setTimeout(() => {
             thirdProgram();
         }, 1000);
