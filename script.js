@@ -6,6 +6,7 @@ const cardSound = new Audio("sounds/card.mp3");
 const hangSound = new Audio("sounds/hang.mp3");
 const fireSound = new Audio("sounds/fire.mp3");
 const giftSound = new Audio("sounds/gift-open.mp3");
+let micStage = 0;
 giftSound.volume = 0.8;
 const surpriseStarted = localStorage.getItem("surpriseStarted");
 let difference = 0;
@@ -14,7 +15,7 @@ tickSound.loop = true;
 if(!surpriseStarted){
 tickSound.play();
 }
-const targetDate = new Date("2026-10-20T19:15:00");
+const targetDate = new Date("2026-10-20T20:20:00");
 const countdownTimer = setInterval(() => {
     const now = new Date();
     difference = targetDate - now;
@@ -143,6 +144,8 @@ function secondProgram() {
 
     setTimeout(() => {
         blowText.classList.add("show");
+        micStage = 1;
+        showMicSkipButton();
         detectBlow();
     }, 3000);
 }
@@ -187,7 +190,8 @@ async function detectBlow() {
 
             // Legalább több egymást követő mérés legyen hangos
             if (loudFrames >= 10) {
-
+                hideMicSkipButton();
+                micStage = 0;
                 const cake = document.getElementById("cake");
                 cake.src = "images/cake2.png";
                 hangSound.currentTime = 0;
@@ -209,12 +213,15 @@ async function detectBlow() {
 
     } catch (error) {
         console.error("Mikrofon hiba:", error);
+        micStage = micStage || 1;
+        showMicSkipButton();
+        console.error("Mikrofonhiba:", error);
     }
 }
 function thirdProgram() {
-
+    micStage = 2;
+    showMicSkipButton();
     detectBlowAgain();
-
 }
 async function detectBlowAgain() {
 
@@ -255,7 +262,8 @@ async function detectBlowAgain() {
             }
 
             if (loudFrames >= 10) {
-
+                hideMicSkipButton();
+                micStage = 0;
                 const cake = document.getElementById("cake");
 
                 cake.src = "images/cake3.png";
@@ -277,6 +285,9 @@ async function detectBlowAgain() {
 
     } catch (error) {
         console.error("Mikrofon hiba:", error);
+        micStage = micStage || 1;
+        showMicSkipButton();
+        console.error("Mikrofonhiba:", error);
     }
 }
 function fireworks() {
@@ -491,3 +502,31 @@ function closeGift() {
 }
 
 
+function showMicSkipButton() {
+    document.getElementById("mic-skip-button")
+        .classList.add("show");
+}
+
+function hideMicSkipButton() {
+    document.getElementById("mic-skip-button")
+        .classList.remove("show");
+}
+
+function skipMicrophone() {
+    hideMicSkipButton();
+
+    const cake = document.getElementById("cake");
+
+    // Ha az első fújásra várunk
+    if (micStage === 1) {
+        cake.src = "images/cake2.png";
+        thirdProgram();
+    }
+    // Ha a második fújásra várunk
+    else if (micStage === 2) {
+        cake.src = "images/cake3.png";
+        fireSound.currentTime = 0;
+        fireSound.play().catch(() => {});
+        fireworks();
+    }
+}
