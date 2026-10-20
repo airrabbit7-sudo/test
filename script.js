@@ -218,6 +218,7 @@ async function listenForBlow(onBlow) {
             }
 
             const rms = Math.sqrt(sum / data.length);
+            console.log("Mikrofon RMS:", rms.toFixed(4));
 
             // Kezdő küszöb: a környezeti zajtól függően módosítható.
             if (rms > 0.035) {
